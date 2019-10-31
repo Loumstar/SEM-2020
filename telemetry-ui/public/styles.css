@@ -1,0 +1,57 @@
+div {
+    border: 1px solid lightgrey;
+    border-radius: 0.5em;
+    outline: 0.5em;
+    text-align: center;
+    margin: 1em;
+}
+
+.dp {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: 1em;
+    margin-right: 0; 
+    background-color: steelblue;
+    border: none;
+}
+
+.temperature_container {
+    position: relative;
+    width: 100%;
+    top: auto;
+    bottom: auto;
+    border: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.control-inputs {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    width: calc(100% - 2em);
+    height: 15em;
+}
+
+.temperatures {
+    position: absolute;
+    top: 17em;
+    right: 0;
+    width: calc(50% - 2em);
+    height: 15em;
+}
+
+.voltages {
+    position: absolute;
+    top: 17em;
+    left: 0;
+    width: calc(50% - 2em);
+    height: 15em;
+}
+
+.line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.5px;
+  }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Arduino Server</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+        <script src="http://localhost:3000/scripts/d3.min.js"></script>
+        <script type='text/javascript' src='./dynamic_barchart.js'></script>
+        <script type='text/javascript' src='./dynamic_linechart.js'></script>
+        
+        <div class="control-inputs" id="controls-div"></div>
+        <div class="voltages" id="voltage-div"></div>
+        <div class="temperatures" id="temperatures-div"></div>
+        <script>
+            const age = 40000,
+                graph_size_ratio = 0.95,
+                temperature_range = {min: 0, max: 50};
+
+            var socket = io.connect('http://localhost:3000');
+
+            var controls_svg = new DynamicLineChart(
+                d3.select("#controls-div"),
+                graph_size_ratio, 
+                temperature_range,
+                age
+            );
+
+            var voltage_svg = new DynamicBarChart(
+                document.getElementById('voltage-div'), 
+                d3.select("#voltage-div"),
+                graph_size_ratio, 
+                temperature_range
+            );
+
+            socket.on('data', function(data){
+                voltage_svg.update([data.data]);
+                controls_svg.update(data.data, data.utc);
+            });
+        </script>
+    </body>
+</html>
