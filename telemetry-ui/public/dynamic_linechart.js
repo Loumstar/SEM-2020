@@ -21,13 +21,13 @@ class DynamicLineChart {
         // Create svg
         this.svg = this.d3target
             .append('svg')
-            .attr('width', this.svg_width)
-            .attr('height', this.svg_height)
+                .attr('width', this.svg_width)
+                .attr('height', this.svg_height)
 
         // Create graph area
         this.graph_area = this.svg
             .append("g")
-            .attr("transform", `translate(${this.graph_margin.left},${this.graph_margin.top})`);
+                .attr("transform", `translate(${this.graph_margin.left},${this.graph_margin.top})`);
 
         // Define an axis for relative time
         this.time_axis = d3.scaleLinear()
@@ -63,14 +63,14 @@ class DynamicLineChart {
         // Create the x-axis
         this.graph_area
             .append("g")
-            .attr("class", "x-axis")
-            .attr("transform", `translate(0,${this.y(0)})`)
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0,${this.y(0)})`)
             .call(d3.axisBottom(this.time_axis));
             
         // Create the y-axis
         this.graph_area
             .append("g")
-            .attr("class", "y-axis")
+                .attr("class", "y-axis")
             .call(d3.axisLeft(this.y));
             
         // Create the line

@@ -28,10 +28,10 @@
             );
 
             var voltage_svg = new DynamicBarChart(
-                document.getElementById('voltage-div'), 
                 d3.select("#voltage-div"),
                 graph_size_ratio, 
-                temperature_range
+                temperature_range,
+                '#666666'
             );
 
             socket.on('data', function(data){

@@ -1,15 +1,13 @@
 class DynamicBarChart {
-    constructor(element, d3target, size, range){
-        this.element = element;
+    constructor(d3target, size, range, colour){
         this.d3target = d3target;
         this.size = size;
         this.range = range;
-        
-        this.fill = '#666666';
+        this.colour = colour;
 
         // Size of svg element
-        this.width = this.size * this.element.offsetWidth;
-        this.height = this.size * this.element.offsetHeight;
+        this.width = this.size * this.d3target.node().offsetWidth;
+        this.height = this.size * this.d3target.node().offsetHeight;
         
         // Create svg
         this.svg = this.d3target
@@ -35,6 +33,6 @@ class DynamicBarChart {
                     let padding = (1 - this.size) * this.height;
                     return padding + (i * this.height / new_data.length); }.bind(this))
                 .attr('height', function(){ return this.size * this.height / new_data.length; }.bind(this))
-                .attr('fill', this.fill)
+                .attr('fill', this.colour)
     }
 };
