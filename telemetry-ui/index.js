@@ -1,9 +1,11 @@
+'use strict'
+
 const express = require('express'),
       SerialPort = require('serialport'),
       Readline = SerialPort.parsers.Readline,
       app = express();
 
-const no_arduino = process.argv.indexOf("no-arduino") >= 0;
+const no_arduino = process.argv.indexOf('no-arduino') >= 0;
 
 var webport = 3000,
     arduino_parser,
@@ -13,22 +15,23 @@ var webport = 3000,
 
 // Serve single HTML page that will display all telemetry.
 app.use(express.static('public'));
+
 // Serve d3.min.js.
-app.use('/d3', express.static(__dirname+'/node_modules/d3/dist'));
+app.use('/d3', express.static(`${__dirname}/node_modules/d3/dist`));
 
 const end_server = (err) => {
     console.error(err);
-    console.log("Exiting...");
+    console.log('Exiting...');
     process.exit(1);
 }
 
 const find_arduino_port = () => {
-    if(process.argv.indexOf("no-arduino") === -1){
+    if(process.argv.indexOf('no-arduino') === -1){
         SerialPort.list((err, ports) => {
             if (err) throw Error(err);
 
             ports.forEach((p) => {
-                if(p.manufacturer == "Arduino (www.arduino.cc)"){
+                if(p.manufacturer == 'Arduino (www.arduino.cc)'){
                     console.log('Arduino identified:');
                     console.log(p);
                     return p.comName;
@@ -43,10 +46,11 @@ const emit_arduino_data = async (arduino_port) => {
     // Method to send data through socket from arduino.
     arduino_parser = arduino_port.pipe(new Readline({delimiter: '\r\n'}));
     arduino_parser.on('data', (data) => {
+        let now = new Date();
         io.sockets.emit('data', 
             {
                 data: data,
-                utc: (today = new Date()).getTime(),
+                utc: now.getTime(),
             }
         );
     })
@@ -55,16 +59,17 @@ const emit_arduino_data = async (arduino_port) => {
 const emit_random_data = async (mean, variance, interval) => {
     // Method to send random data through socket for testing without an arduino    
     setInterval(() => {
+        let now = new Date();
         io.sockets.emit('data',
             {
                 data: (Math.random() * variance) + mean,
-                utc: (today = new Date()).getTime(),
+                utc: now.getTime(),
             });
     }, interval);
 }
 
 var server = app.listen(webport, () => {
-    console.log("Starting...");
+    console.log('Starting...');
     try {
         // Find portname
         arduino_portname = find_arduino_port();
@@ -81,10 +86,10 @@ var server = app.listen(webport, () => {
                 .catch(err => { throw Error(err) });
         } else {
             // Else fail fast
-            throw Error("No Arduino Found.");
+            throw Error('No Arduino Found.');
         }
 
-        console.log("Server started up successfully.");
+        console.log('Server started up successfully.');
 
     } catch(err) {
         end_server(err);
@@ -94,5 +99,5 @@ var server = app.listen(webport, () => {
 var io = require('socket.io')(server);
 
 io.on('connection', () => {
-    console.log("A new client has connected to the server.");
+    console.log('A new client has connected to the server.');
 })
