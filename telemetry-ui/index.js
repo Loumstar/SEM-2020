@@ -12,9 +12,9 @@ var webport = 3000,
     arduino_baudrate = 9600;
 
 // Serve single HTML page that will display all telemetry.
-
 app.use(express.static('public'));
-app.use('/scripts', express.static(__dirname+'/d3'));
+// Serve d3.min.js.
+app.use('/d3', express.static(__dirname+'/node_modules/d3/dist'));
 
 const end_server = (err) => {
     console.error(err);
