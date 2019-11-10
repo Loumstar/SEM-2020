@@ -5,7 +5,7 @@ const express = require('express'),
       Readline = SerialPort.parsers.Readline,
       app = express();
 
-const no_arduino = process.argv.indexOf('no-arduino') >= 0;
+const mock_arduino = process.argv.indexOf('mock-arduino') >= 0;
 
 var webport = 3000,
     arduino_parser,
@@ -19,14 +19,8 @@ app.use(express.static('public'));
 // Serve d3.min.js.
 app.use('/d3', express.static(`${__dirname}/node_modules/d3/dist`));
 
-const end_server = (err) => {
-    console.error(err);
-    console.log('Exiting...');
-    process.exit(1);
-}
-
 const find_arduino_port = () => {
-    if(process.argv.indexOf('no-arduino') === -1){
+    if(!mock_arduino){
         SerialPort.list((err, ports) => {
             if (err) throw Error(err);
 
@@ -64,12 +58,14 @@ const emit_random_data = async (mean, variance, interval) => {
             {
                 data: (Math.random() * variance) + mean,
                 utc: now.getTime(),
-            });
+            }
+        );
     }, interval);
 }
 
 var server = app.listen(webport, () => {
     console.log('Starting...');
+    
     try {
         // Find portname
         arduino_portname = find_arduino_port();
@@ -80,8 +76,8 @@ var server = app.listen(webport, () => {
             // Listen for data from arduino
             emit_arduino_data(arduino_port)
                 .catch(err => { throw Error(err) });
-        } else if(no_arduino){
-            // If no arduino found and no-arduino selected, emit random data
+        } else if(mock_arduino){
+            // If no arduino found and mock-arduino selected, emit random data
             emit_random_data(25, 1, 80)
                 .catch(err => { throw Error(err) });
         } else {
@@ -92,7 +88,10 @@ var server = app.listen(webport, () => {
         console.log('Server started up successfully.');
 
     } catch(err) {
-        end_server(err);
+        console.error(err);
+        console.log('Exiting...');
+
+        process.exit(1);
     } 
 })
 
