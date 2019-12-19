@@ -1,4 +1,5 @@
-div {
+.telemetry{
+    position: relative;
     border: 1px solid lightgrey;
     border-radius: 0.5em;
     outline: 0.5em;
@@ -6,8 +7,8 @@ div {
     margin: 1em;
 }
 
-.temperature_container {
-    position: relative;
+.voltage_container {
+    position: absolute;
     width: 100%;
     top: auto;
     bottom: auto;
@@ -17,28 +18,29 @@ div {
 }
 
 .control-inputs {
-    position: absolute;
-    right: 0;
-    left: 0;
-    top: 0;
     width: calc(100% - 2em);
-    height: 15em;
+    height: 10em;
 }
 
-.temperatures {
+.voltage {
     position: absolute;
-    top: 17em;
     right: 0;
     width: calc(50% - 2em);
     height: 15em;
 }
 
-.voltages {
-    position: absolute;
-    top: 17em;
+.temperature_graphs {
+    position: relative;
     left: 0;
     width: calc(50% - 2em);
-    height: 15em;
+    height: 2em;
+}
+.temperature_container {
+    position: absolute;
+    left: 0;
+    width: calc(50% - 2em);
+    /* height: 5em; */
+    border: 1px solid lightgrey;
 }
 
 .line {
@@ -46,3 +48,15 @@ div {
     stroke: #000;
     stroke-width: 1.5px;
   }
+
+.temp-row {
+  align-items: left;
+  width: 100%;
+  column-count: 5;
+  column-width: 5px;
+}
+
+.temp-num {
+  width: 100%;
+  left: 0;
+}

@@ -1,3 +1,4 @@
 #ignore all hidden files & directories
 .*
 !/.gitignore
+node_modules

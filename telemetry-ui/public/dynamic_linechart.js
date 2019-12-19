@@ -17,7 +17,7 @@ class DynamicLineChart {
         // Size of the graph area
         this.axis_width = this.svg_width - this.graph_margin.left - this.graph_margin.right;
         this.axis_height = this.svg_height - this.graph_margin.top - this.graph_margin.bottom;
-        
+
         // Create svg
         this.svg = this.d3target
             .append('svg')
@@ -31,21 +31,21 @@ class DynamicLineChart {
 
         // Define an axis for relative time
         this.time_axis = d3.scaleLinear()
-            .domain([-this.age * (10 ** -3) , 0])
+            .domain([-this.age, 0])
             .range([0, this.axis_width]);
-            
-        let now = (new Date()).getTime();
+
+        // let now = (new Date()).getTime();
 
         // Define a scale to evaulate the location of a data point based on when it was created, using a timestamp
         this.utc = d3.scaleLinear()
-            .domain([now - this.age, now])
+            .domain([-this.age, 0])
             .range([0, this.axis_width]);
-            
+
         // Define the y axis
         this.y = d3.scaleLinear()
             .domain([this.range.min, this.range.max])
             .range([this.axis_height, 0]);
-            
+
         // Define the line equation
         this.line = d3.line()
             .x(function(d){ return this.utc(d.utc); }.bind(this))
@@ -59,20 +59,20 @@ class DynamicLineChart {
             .append("rect")
                 .attr("width", this.svg_width)
                 .attr("height", this.svg_height);
-        
+
         // Create the x-axis
         this.graph_area
             .append("g")
                 .attr("class", "x-axis")
                 .attr("transform", `translate(0,${this.y(0)})`)
             .call(d3.axisBottom(this.time_axis));
-            
+
         // Create the y-axis
         this.graph_area
             .append("g")
                 .attr("class", "y-axis")
             .call(d3.axisLeft(this.y));
-            
+
         // Create the line
         this.graph_area.append("g")
                 .attr("clip-path", "url(#clip)")
@@ -88,8 +88,8 @@ class DynamicLineChart {
         });
 
         // Re-calculate the position of all data points with respect to new time --> Find better method
-        let now = (new Date()).getTime();
-        this.utc.domain([now - this.age, now]);
+        // let now = (new Date()).getTime();
+        this.utc.domain([utc - this.age, utc]);
 
         // Redraw the line
         d3.select('.line').attr("d", this.line);

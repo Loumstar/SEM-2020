@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Arduino Server</title>
+        <title>Vehicle Telemetry</title>
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
@@ -9,34 +9,71 @@
         <script src="./d3/d3.min.js"></script>
         <script type='text/javascript' src='./dynamic_barchart.js'></script>
         <script type='text/javascript' src='./dynamic_linechart.js'></script>
-        
-        <div class="control-inputs" id="controls-div"></div>
-        <div class="voltages" id="voltage-div"></div>
-        <div class="temperatures" id="temperatures-div"></div>
+
+        <div>
+          <div class="telemetry control-inputs" id="controls-div"></div>
+
+          <div class="temperature_container telemetry">
+            <h3>Temperatures</h3>
+              <div class="temperature_graphs" id="temp1-div"></div>
+              <div class="temperature_graphs" id="temp2-div"></div>
+              <div class="temperature_graphs" id="temp3-div"></div>
+          </div>
+          <div class="telemetry voltage" id="voltage-div"></div>
+        </div>
+
         <script>
-            const age = 40000,
-                graph_size_ratio = 0.95,
-                temperature_range = {min: 0, max: 50};
+            const age = 400,
+                graph_size_ratio = 1,
+                temperature_range = {min: 0, max: 100};
+                voltage_range = {min: 0, max: 100};
 
             var socket = io.connect(document.URL);
 
             var controls_svg = new DynamicLineChart(
                 d3.select("#controls-div"),
-                graph_size_ratio, 
+                graph_size_ratio,
                 temperature_range,
                 age
             );
 
-            var voltage_svg = new DynamicBarChart(
-                d3.select("#voltage-div"),
-                graph_size_ratio, 
-                temperature_range,
-                '#666666'
+            var temp1_svg = new DynamicBarChart(
+                d3.select("#temp1-div"),
+                graph_size_ratio,
+                voltage_range,
+                '#606FF6'
+            );
+
+            var temp2_svg = new DynamicBarChart(
+                d3.select("#temp2-div"),
+                graph_size_ratio,
+                voltage_range,
+                '#606AA6'
+            );
+
+            var temp3_svg = new DynamicBarChart(
+                d3.select("#temp3-div"),
+                graph_size_ratio,
+                voltage_range,
+                '#006F26'
             );
 
             socket.on('data', function(data){
-                voltage_svg.update([data.data]);
-                controls_svg.update(data.data, data.utc);
+              console.log(data.id);
+              switch(data.id){
+                case 0:
+                  temp1_svg.update([data.data]);
+                  break;
+                case 1:
+                  temp2_svg.update([data.data]);
+                  break;
+                case 2:
+                  temp3_svg.update([data.data]);
+                  break;
+                case 3:
+                  controls_svg.update(data.data, data.utc);
+                  break;
+              }
             });
         </script>
     </body>
